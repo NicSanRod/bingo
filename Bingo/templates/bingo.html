@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ bingo.nombre }}</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background: linear-gradient(135deg, #0f1724 0%, #1f2a44 100%);
+            color:#e6eef8;
+            min-height:100vh;
+            padding:28px;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+
+        h1{
+            margin:18px 0 6px;
+            font-size:2.25rem;
+            text-align:center;
+            letter-spacing:0.6px;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.6);
+        }
+
+        .subtitle{
+            color:#c9d7f2;
+            margin-bottom:14px;
+            font-size:0.98rem;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap:14px;
+            width:100%;
+            margin-top:18px;
+            padding:6px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-radius:14px;
+            box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+        }
+
+        .cell{
+            background:linear-gradient(180deg,#2f3250,#383a5b);
+            border-radius:12px;
+            padding:12px;
+            min-height:110px;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            text-align:center;
+            cursor:pointer;
+            transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+            user-select:none;
+            position:relative;
+            overflow:hidden;
+            flex-direction:column;
+            border: 1px solid rgba(255,255,255,0.03);
+            box-shadow: 0 6px 14px rgba(2,6,23,0.45);
+        }
+
+        .cell:hover{
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(2,6,23,0.55);
+        }
+
+        .cell.active{
+            background: linear-gradient(180deg,#2dc26b,#28c76f);
+            color:#07210b;
+            transform: scale(1.04);
+            box-shadow: 0 14px 36px rgba(40,199,111,0.12), inset 0 1px 0 rgba(255,255,255,0.12);
+        }
+
+        .top-bar{
+            width:100%;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:8px;
+            flex-wrap:wrap;
+            gap:10px;
+            padding:6px 4px;
+        }
+
+        .back{
+            background:rgba(255,255,255,0.03);
+            padding:10px 14px;
+            border-radius:10px;
+            text-decoration:none;
+            color: #e6eef8;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .back:hover{
+            background:#5b5b8f;
+        }
+
+        .btn{
+            background:linear-gradient(180deg,#5b8cff,#3f6fe6);
+            border:none;
+            padding:10px 14px;
+            border-radius:10px;
+            color:white;
+            cursor:pointer;
+            box-shadow: 0 6px 18px rgba(59,110,230,0.12);
+            transition: transform 150ms ease, box-shadow 150ms ease;
+        }
+
+        .btn:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 18px 34px rgba(59,110,230,0.18);
+        }
+
+        .win{
+            margin-top:20px;
+            font-size:1.35rem;
+            color:#07210b;
+            display:none;
+            background: linear-gradient(90deg,#ffd166,#ffb86b);
+            padding:12px 18px;
+            border-radius:12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+            transform-origin:center;
+            animation: pop 600ms ease forwards;
+        }
+
+        @keyframes pop{
+            0%{ transform: scale(0.9); opacity:0 }
+            60%{ transform: scale(1.06); opacity:1 }
+            100%{ transform: scale(1); opacity:1 }
+        }
+
+        @media(max-width:600px){
+            .grid{
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-bar">
+
+        <div style="display:flex;gap:8px;align-items:center;">
+            <a href="/" class="back">⬅ Volver</a>
+            
+        </div>
+
+    </div>
+
+    <h1>{{ bingo.nombre }}</h1>
+    <p class="subtitle">Haz clic en las casillas cuando completes el reto</p>
+
+    <div class="grid" id="grid">
+
+        {% for reto in retos %}
+        <div class="cell" {% if reto.imagen %} style="flex-direction:column;" onclick="toggle(this)"{% endif %}>
+
+            <div style="width:100%;">
+                <p style="margin-bottom:10px;font-weight:600;line-height:1.15;">{{ reto.texto }}</p>
+            </div>
+
+            {% if reto.imagen %}
+
+                <img src="{{ reto.imagen }}" style="width:100%; border-radius:8px; margin-top:8px; object-fit:cover; max-height:120px;">
+                
+            {% else %}
+
+                <form action="/subir/{{ reto.id }}" method="POST" enctype="multipart/form-data" style="margin-top:8px;">
+
+                    <input type="file" name="imagen" id="file-{{ reto.id }}" hidden>
+
+                    <button type="button" class="btn"
+                        onclick="document.getElementById('file-{{ reto.id }}').click()">
+                        📸 Subir prueba
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="win" id="win">
+        🎉 ¡BINGO COMPLETADO!
+    </div>
+
+    <script>
+        const cells = Array.from(document.querySelectorAll(".cell"));
+
+        function toggle(cell, event){
+            // evitar togglear si el usuario interactúa con un input o botón dentro de la celda
+            const tag = event && event.target && event.target.tagName;
+            if(tag === 'INPUT' || tag === 'BUTTON' || tag === 'FORM' || tag === 'LABEL') return;
+
+            cell.classList.toggle("active");
+            checkWin();
+        }
+
+        function resetGrid(){
+            cells.forEach(c => c.classList.remove("active"));
+            const winEl = document.getElementById("win");
+            winEl.style.display = "none";
+        }
+
+        function checkWin(){
+            // convertir a matriz 5x5
+            let grid = cells.map(c => c.classList.contains("active"));
+
+            let size = 5;
+            let win = false;
+
+            // filas
+            for(let i=0;i<size;i++){
+                if(grid.slice(i*size,(i+1)*size).every(v=>v)) win=true;
+            }
+
+            // columnas
+            for(let i=0;i<size;i++){
+                let col = true;
+                for(let j=0;j<size;j++){
+                    if(!grid[i + j*size]) col=false;
+                }
+                if(col) win=true;
+            }
+
+            // diagonal principal
+            if([0,6,12,18,24].every(i=>grid[i])) win=true;
+
+            // diagonal secundaria
+            if([4,8,12,16,20].every(i=>grid[i])) win=true;
+
+            const winEl = document.getElementById("win");
+            if(win){
+                winEl.style.display = "block";
+            } else {
+                winEl.style.display = "none";
+            }
+        }
+
+        
+
+        // Botón reiniciar
+        document.getElementById('resetBtn').addEventListener('click', resetGrid);
+
+        // Botón mezclar: mezcla el contenido de las celdas
+        document.getElementById('shuffleBtn').addEventListener('click', () => {
+            const texts = cells.map(c => c.querySelector('p').innerText || '');
+            // Fisher-Yates
+            for(let i=texts.length-1;i>0;i--){
+                const j = Math.floor(Math.random()*(i+1));
+                [texts[i], texts[j]] = [texts[j], texts[i]];
+            }
+            cells.forEach((c,idx)=> c.querySelector('p').innerText = texts[idx]);
+            resetGrid();
+        });
+
+        // Copiar enlace
+        document.getElementById('shareBtn').addEventListener('click', async () => {
+            try{
+                await navigator.clipboard.writeText(window.location.href);
+                document.getElementById('shareBtn').innerText = 'Enlace copiado';
+                setTimeout(()=> document.getElementById('shareBtn').innerText = 'Copiar enlace', 1600);
+            }catch(e){
+                alert('No se pudo copiar el enlace');
+            }
+        });
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function(){
+                const id = this.id.split('-')[1];
+                const btn = document.getElementById('send-' + id);
+
+                if(this.files.length > 0){
+                    btn.style.display = 'inline-block';
+                    btn.textContent = "✔ Subir imagen";
+                }
+            });
+        });
+
+    </script>
+
+</body>
+</html>

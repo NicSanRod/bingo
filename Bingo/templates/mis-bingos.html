@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Bingos</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background: linear-gradient(135deg, #1e1e2f, #2b2b45);
+            color:white;
+            min-height:100vh;
+            padding:30px;
+        }
+
+        .container{
+            max-width:1000px;
+            margin:auto;
+        }
+
+        h1{
+            text-align:center;
+            font-size:3rem;
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:#cfcfe6;
+            margin-bottom:40px;
+        }
+
+        .top-bar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:30px;
+        }
+
+        .back{
+            background:#444470;
+            padding:10px 15px;
+            border-radius:10px;
+            text-decoration:none;
+            color:white;
+        }
+
+        .back:hover{
+            background:#5b5b8f;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap:20px;
+        }
+
+        .card{
+            background:#35355c;
+            padding:20px;
+            border-radius:15px;
+            transition:0.2s;
+            cursor:pointer;
+            text-decoration:none;
+            color:white;
+            box-shadow:0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+            background:#444470;
+        }
+
+        .card h2{
+            margin-bottom:10px;
+            font-size:1.3rem;
+        }
+
+        .card p{
+            color:#cfcfe6;
+            font-size:0.9rem;
+        }
+
+        .empty{
+            text-align:center;
+            margin-top:50px;
+            color:#b8b8d4;
+        }
+
+        .btn{
+            display:inline-block;
+            margin-top:15px;
+            padding:8px 12px;
+            background:#5b8cff;
+            border-radius:10px;
+            color:white;
+            text-decoration:none;
+        }
+
+        .btn:hover{
+            background:#7aa2ff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="top-bar">
+            <a href="/" class="back">⬅ Volver</a>
+        </div>
+
+        <h1>📚 Mis Bingos</h1>
+
+        <p class="subtitle">
+            Aquí tienes todos los bingos que has creado
+        </p>
+
+        {% if bingos %}
+
+        <div class="grid">
+
+            {% for bingo in bingos %}
+            <a href="/bingo/{{ bingo.id }}" class="card">
+
+                <h2>🎯 {{ bingo.nombre }}</h2>
+
+                <p>
+                    {{ bingo.retos.split("||") | length }} retos
+                </p>
+
+                <span class="btn">Ver bingo</span>
+
+            </a>
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty">
+            <h2>No tienes bingos aún 😢</h2>
+            <p>Crea tu primer bingo para empezar a jugar</p>
+
+            <a href="/crear" class="btn">Crear Bingo</a>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
