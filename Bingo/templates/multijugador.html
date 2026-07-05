@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multijugador</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background: linear-gradient(135deg, #1e1e2f, #2b2b45);
+            color:white;
+            min-height:100vh;
+            padding:30px;
+        }
+
+        .container{
+            max-width:1000px;
+            margin:auto;
+        }
+
+        h1{
+            text-align:center;
+            font-size:3rem;
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:#cfcfe6;
+            margin-bottom:40px;
+        }
+
+        .top-bar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:30px;
+        }
+
+        .back{
+            background:#444470;
+            padding:10px 15px;
+            border-radius:10px;
+            text-decoration:none;
+            color:white;
+        }
+
+        .back:hover{
+            background:#5b5b8f;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap:20px;
+        }
+
+        .card{
+            background:#35355c;
+            padding:20px;
+            border-radius:15px;
+            transition:0.2s;
+            cursor:pointer;
+            text-decoration:none;
+            color:white;
+            box-shadow:0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+            background:#444470;
+        }
+
+        .card h2{
+            margin-bottom:10px;
+            font-size:1.3rem;
+        }
+
+        .card p{
+            color:#cfcfe6;
+            font-size:0.9rem;
+        }
+
+        .empty{
+            text-align:center;
+            margin-top:50px;
+            color:#b8b8d4;
+        }
+
+        .btn{
+            display:inline-block;
+            margin-top:15px;
+            padding:8px 12px;
+            background:#28a745;
+            border-radius:10px;
+            color:white;
+            text-decoration:none;
+        }
+
+        .btn:hover{
+            background:#34c759;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="top-bar">
+        <a href="/" class="back">⬅ Volver</a>
+    </div>
+
+    <h1>🎮 Multijugador</h1>
+
+    <p class="subtitle">
+        Elige un bingo para comenzar una partida
+    </p>
+
+    {% if bingos %}
+
+    <div class="grid">
+
+        {% for bingo in bingos %}
+
+        <div class="card">
+
+            <h2>🎯 {{ bingo.nombre }}</h2>
+
+            <p>
+                {{ bingo.retos.split("\n") | length }} retos
+            </p>
+
+            <a href="/jugar/{{ bingo.id }}" class="btn">
+                ▶ Jugar
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty">
+        <h2>No hay bingos disponibles 😢</h2>
+        <p>Cuando alguien cree un bingo aparecerá aquí.</p>
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

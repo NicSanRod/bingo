@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ partida.bingo.nombre }}</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background:#f4f4f4;
+            margin:30px;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns:repeat(5,1fr);
+            gap:15px;
+        }
+
+        .casilla{
+            background:white;
+            border:2px solid #ccc;
+            padding:15px;
+            border-radius:10px;
+            text-align:center;
+        }
+
+        .completado{
+            border-color:green;
+            background:#d8ffd8;
+        }
+
+        img{
+            width:100%;
+            margin-top:10px;
+            border-radius:8px;
+        }
+
+        form{
+            margin-top:10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>{{ partida.bingo.nombre }}</h1>
+
+<div class="grid">
+
+{% for reto in retos_partida %}
+
+<div class="casilla {% if reto.completado %}completado{% endif %}">
+
+    <strong>{{ reto.reto.texto }}</strong>
+
+    {% if reto.imagen %}
+        <img src="{{ reto.imagen }}">
+    {% else %}
+        <form action="/subir/{{ reto.id }}" method="POST" enctype="multipart/form-data">
+
+            <input type="file" name="imagen" required>
+
+            <br><br>
+
+            <button type="submit">
+                Subir foto
+            </button>
+
+        </form>
+    {% endif %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>

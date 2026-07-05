@@ -123,17 +123,17 @@
             Aquí tienes todos los bingos que has creado
         </p>
 
-        {% if bingos %}
+        {% if partidas %}
 
         <div class="grid">
 
-            {% for bingo in bingos %}
-            <a href="/bingo/{{ bingo.id }}" class="card">
+            {% for partida in partidas %}
+            <a href="/partida/{{ partida.id }}" class="card">
 
-                <h2>🎯 {{ bingo.nombre }}</h2>
+                <h2>🎯 {{ partida.bingo.nombre }}</h2>
 
                 <p>
-                    {{ bingo.retos.split("||") | length }} retos
+                    {{ partida.bingo.retos.split("\n") | length }} retos
                 </p>
 
                 <span class="btn">Ver bingo</span>
